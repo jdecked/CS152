@@ -1,21 +1,25 @@
+# -*- coding: utf-8 -*-
+
 import heapq
 import numpy as np
 import re
 from copy import deepcopy
+from collections import Hashable
 
 
 class PuzzleNode(object):
     def __init__(self, size, state=[], parent=None,
                  heuristicCost=0, moves=0):
         """
-        PuzzleNode class representing state of tiles as 2D array.
+        PuzzleNode class representing the state of tiles as a 2D array.
 
         @param size: Size of puzzle board
         @keyword state: Starting state of board (default: [])
-        @keyword parent: Pointer to parent PuzzleNode
+        @keyword parent: Pointer to parent PuzzleNode (default: None)
         @keyword heuristicCost: Estimated cost of going from current node to
-                                goal node
+                                goal node (default: 0)
         @keyword moves: Cost of going from initial node to current node
+                        (default: 0)
 
         @ivar board: 2D array representing state of tiles
         @ivar pathCost: Cost of going from initial node to current node, plus
@@ -94,8 +98,8 @@ class PuzzleNode(object):
 
 class InvalidBoardFormatError(TypeError):
     def __init__(self, board):
-        self.message = 'Board is not of type <list> or <numpy.ndarray>: {}' \
-            .format(board)
+        self.message = "Board is not an instance of {} or {}: {}" \
+            .format(list, np.ndarray, board)
 
 
 class IncorrectBoardSizeError(ValueError):
@@ -115,6 +119,28 @@ class UnsolvableBoardError(ValueError):
         self.message = 'Board {} is unsolvable'.format(board)
 
 
+def memoize(func):
+    class memoized(dict):
+        def __init__(self, func):
+            self.func = func
+
+        def __call__(self, arg):
+            # Can we actually memoize this?
+            if not isinstance(arg, Hashable):
+                return self.func(arg)
+
+            return self[arg]
+
+        def __missing__(self, key):
+            value = self[key] = self.func(key)
+            return value
+
+        def __repr__(self):
+            return repr(self.func)
+
+    return memoized(func)
+
+
 def validatePuzzle(n, state, makeSolvable=False):
     """
     Validates given n-puzzle.
@@ -122,10 +148,9 @@ def validatePuzzle(n, state, makeSolvable=False):
     @param n: Size of puzzle board
     @param state: State of puzzle
     @keyword makeSolvable: If state is unsolvable and makeSolvable is True,
-                           swaps two adjacent tiles such that the sum of
-                           number of tiles both after and less than each tile
-                           in state becomes even. If False or state is solvable
-                           nothing is swapped.
+                           swaps two adjacent tiles such that the parity of the
+                           board is reversed. If False or state is solvable,
+                           nothing is swapped. (default: False)
 
     @return err: Error code 0 if n and state are valid; else
                  -1 if IncorrectBoardSizeError, InvalidBoardFormatError, or
@@ -136,15 +161,18 @@ def validatePuzzle(n, state, makeSolvable=False):
                            makeSolvable is False, None.
 
     @raise IncorrectBoardSizeError: Raised if size of both state and all
-                                    sublists of state don't equal n
+                                    sublists of state doesn't equal n
     @raise InvalidBoardFormatError: Raised if state is formatted incorrectly
     @raise InvalidTilesError: Raised if state doesn't contain every number
                               from 0 to n^2-1 exactly once
     @raise UnsolvableBoardError: Raised if state cannot be solved to goal state
                                  (i.e. board parity is not even for odd n;
                                  board parity is not even for even n with 0 on
-                                 even row; or board parity is not odd for even
-                                 n with 0 on odd row).
+                                 odd row; or board parity is not odd for even
+                                 n with 0 on even row, counting from top
+                                 starting from 1 — modified from Johnson &
+                                 Story's (1879) use of the Manhattan distance
+                                 to fit our different goal state).
     """
 
     err = 0
@@ -168,33 +196,9 @@ def validatePuzzle(n, state, makeSolvable=False):
                 raise InvalidTilesError(actualOccurrences, expectedTile)
             expectedTile += 1
 
-        # The parity (odd or even) of the sum of the number of tiles both
-        # after and less than each tile is the parity of the board. For an
-        # n x n board, sliding a tile horizontally has no effect on the parity,
-        # but sliding a tile vertically does. This is because board parity is
-        # the parity of the number of tiles that come after each tile, and
-        # sliding a tile up/down changes the number of tiles which come after
-        # it.
-        #
-        # The goal state where 0 is in the upper left corner and every tile
-        # after that is numbered sequentially from left to right (e.g.
-        # [[0, 1, 2], [3, 4, 5], [6, 7, 8]]) has even parity (based on the
-        # definition of board parity — that number for the goal state is 0).
-        #
-        # Sliding a tile vertically changes the number of tiles that come
-        # after the tile by n ± 1. If n is odd, this is always an even number,
-        # so the parity number changes by an even number and the board parity
-        # remains the same. If n is even, however, this is always an odd
-        # number, so the board parity becomes even if it was odd, and vice
-        # versa.
-        #
-        # For odd n, we only have to look at the board parity. For even n,
-        # we have to look both at the board parity and at whether the row
-        # containing the 0 is odd or even (counting the number of rows from the
-        # top of the board). If the 0 is in an even row, the number of tiles
-        # above it is odd, and the number of tiles below it is even;
-        # conversely, if the 0 is in an odd row, it has an even number of tiles
-        # above and an odd number of tiles below it.
+        solvable = True
+
+        # Parity of board permutations
         numTiles = 0
         for k in range(n):
             for l in range(n):
@@ -207,8 +211,20 @@ def validatePuzzle(n, state, makeSolvable=False):
                         lambda tile: tile < currentTile and tile != 0,
                         flattenedBoard[currentTileIdx+1:]
                     )))
+        permutationsParity = numTiles % 2
 
-        if (numTiles % 2) != 0:
+        if n % 2 != 0:
+            if permutationsParity != 0:
+                solvable = False
+        else:
+            # Parity of row with empty square
+            emptyI, emptyJ = list(zip(*np.where(np.array(state) == 0)))[0]
+            emptySquareRowParity = emptyI % 2
+
+            if permutationsParity != emptySquareRowParity:
+                solvable = False
+
+        if not solvable:
             if makeSolvable:
                 # Unsolvable puzzles can be made solvable by swapping the first
                 # two non-zero tiles.
@@ -219,7 +235,6 @@ def validatePuzzle(n, state, makeSolvable=False):
                                 state[x-1][y-1], state[x][y]
 
                             return err, solvableBoard
-
             else:
                 raise UnsolvableBoardError(state)
 
@@ -235,6 +250,7 @@ def validatePuzzle(n, state, makeSolvable=False):
     return err, solvableBoard
 
 
+@memoize
 def misplacedTiles(state):
     """
     Heuristic function for number of misplaced tiles in given state.
@@ -255,6 +271,7 @@ def misplacedTiles(state):
     return misplacedTiles
 
 
+@memoize
 def manhattanDistance(state):
     """
     Heuristic function for how far away each tile is from its goal position,
@@ -279,13 +296,51 @@ def manhattanDistance(state):
     return distance
 
 
+@memoize
+def patternDatabase(state):
+    """
+    Generates a pattern database for the 8-puzzle by partitioning the puzzle
+    into disjoint groups of tiles, then computing the minimum number of moves
+    required to get each group of tiles to their respective goal states. For
+    each group in a given state, these minimum numbers of moves are added
+    together, resulting in the overall admissible heuristic. This is based on
+    the paper Additive Pattern Database Heuristics (Felner, A., Korf, R. E.,
+    & Hanan, S., 2004). This is specifically an additive pattern database with
+    3-5 partitioning.
+
+    Generates a pattern database for the 8-puzzle by only considering
+
+    Pattern:
+    +-----------+
+    | - | x | o |
+    | x | x | o |
+    | o | o | o |
+    +-----------+
+    where '-' is the blank square, 'x' is one group, and 'o' is another group.
+
+    This heuristic outperforms both manhattanDistance and misplacedTiles
+    because: 1) manhattanDistance outperforms misplacedTiles; 2) this heuristic
+    outperforms manhattanDistance since this is a generalization — the
+    manhattanDistance is really a pattern grouping wherein each tile is its
+    own disjoint group, and is thus the lower-bound for this heuristic.
+    """
+
+    # breadthFirstSearch()
+    # partition3TileCoords = [(0, 1), (1, 0), (1, 1)]
+    # partition5TileCoords = [(0, 2), (1, 2), (2, 0), (2, 1), (2, 2)]
+
+    # return sum([pdb.search(state) for pdb in pdbs])
+    raise NotImplementedError
+
+
 def getChildStates(state):
     """
     Generates child states by looking at state to determine which tiles
-    can move into the empty space, then returning all valid moves.
+    can move into the empty space, then returning all swaps of the empty
+    space with those tiles.
 
     @param state: Current PuzzleNode
-    @return: Possible child states
+    @return possibleChildren: Possible child states
     """
     # First find which tiles can move into empty space
     emptyI, emptyJ = list(zip(*np.where(state.board == 0)))[0]
@@ -322,24 +377,31 @@ def solvePuzzle(n, state, heuristic, printed=True):
     @keyword printed: If True, solvePuzzle prints all states of the board (as
                       lists of lists) from initial state to goal, as well as
                       the number of moves to reach the goal and the maximum
-                      frontier size. If False, nothing is printed.
+                      frontier size. If False, nothing is printed. (default:
+                      True)
 
     @var frontier: A priority queue ordered by path cost
-    @var explored: Adding nodes to explored prevents repeated states,
-                   including those which arise from simply undoing the
-                   previous move
+    @var explored: A dictionary of previously seen states mapped to the
+                   PuzzleNode (and thus pathCost, depth) at which we saw them.
+                   This prevents repeated states, including those which arise
+                   from simply undoing the previous move.
 
-    @return moves: Number of moves required to reach goal from initial state
+    @return totalMoves: Number of moves required to reach goal state from
+                        initial state
     @return maxFrontierSize: Maximum size of frontier during the search
-    @return err: -1 if n or state is invalid,
-                 -2 if board can't be solved,
-                 else 0.
-                 If err is non-zero, moves and frontierSize are 0.
+    @return err: -1 if n or state is invalid, -2 if board can't be solved,
+                 else 0. If err is non-zero, moves and frontierSize are 0.
+                 State is automatically invalid if pattern database heuristic
+                 is in use, but state isn't an 8-puzzle.
     """
 
     moves = 0
+    totalMoves = 0
+    maxFrontierSize = 0
     err, solvableBoard = validatePuzzle(n, state)
-    maxFrontierSize = 1
+
+    if heuristic == patternDatabase and n != 3:
+        err = -1
 
     if not err:
         state = solvableBoard or state
@@ -353,13 +415,13 @@ def solvePuzzle(n, state, heuristic, printed=True):
 
         explored = {}
         frontier = [initialNode]
+        maxFrontierSize += 1
 
         while frontier:
             currentNode = heapq.heappop(frontier)
 
             if currentNode == goalNode:
                 totalMoves = currentNode.moves
-                print('Goal reached!')
 
                 if printed:
                     solutionPath = [str(currentNode.board.tolist())]
@@ -414,15 +476,8 @@ def solvePuzzle(n, state, heuristic, printed=True):
                     heapq.heappush(frontier, childNode)
 
             moves += 1
-            totalMoves = currentNode.moves
             if len(frontier) > maxFrontierSize:
                 maxFrontierSize = len(frontier)
-                if maxFrontierSize > 15000:
-                    print(maxFrontierSize)
-
-    else:
-        totalMoves = 0
-        maxFrontierSize = 0
 
     return totalMoves, maxFrontierSize, err
 
@@ -447,63 +502,14 @@ def testSolvePuzzle(boards, heuristics):
                                                    printed=False)
 
             print('Moves to solve current board: {}'.format(moves))
-            print('Current board\'s max frontier size: {}'.format(
-                frontierSize))
-            print('Error code: {}'.format(err))
-            print('\n')
+            print('Current board\'s max frontier size: {}\n'.format(
+                  frontierSize))
 
 
-"""
-Document the results using a markdown cell,
-making it clear which initial state lead to which result.
-Your code will be tested from other initial states also
-(with a possibly larger n) to ensure its correct operation.
-[LOs: #search, #aicoding]
-"""
 heuristics = [misplacedTiles, manhattanDistance]
-# heuristics = [manhattanDistance]
 testBoards = [
-    # 5 7 6 2 4 3 8 1 0
-    # states explored: 1408
-    # states generated: 2190
-    # found at depth: 28
     [[5, 7, 6], [2, 4, 3], [8, 1, 0]],
-    # 7 0 8 4 6 1 5 3 2
-    # states explored: 1652
-    # states generated: 2574
-    # found at depth: 25
-    # [[7, 0, 8], [4, 6, 1], [5, 3, 2]],
-    # 2 3 7 1 8 0 6 5 4
-    # states explored: 114
-    # states generated: 173
-    # found at depth: 17
-    # [[2, 3, 7], [1, 8, 0], [6, 5, 4]]
+    [[7, 0, 8], [4, 6, 1], [5, 3, 2]],
+    [[2, 3, 7], [1, 8, 0], [6, 5, 4]]
 ]
-# testBoards = [
-#     # 1 2 3 4 0 6 7 5 8
-#     # states explored: 498
-#     # states generated: 792
-#     # found at depth: 20
-#     [[1, 2, 3], [4, 0, 6], [7, 5, 8]],
-#     # 1 6 2 4 3 8 7 0 5
-#     # states explored: 1009
-#     # states generated: 1599
-#     # found at depth: 21
-#     [[1, 6, 2], [4, 3, 8], [7, 0, 5]],
-#     # 2 1 3 4 7 6 5 8 0
-#     # states explored: 1236
-#     # states generated: 1951
-#     # found at depth: 24
-#     [[2, 1, 3], [4, 7, 6], [5, 8, 0]],
-#     # 5 0 2 8 4 7 6 3 1
-#     # states explored: 1927
-#     # states generated: 2994
-#     # found at depth: 25
-#     [[5, 0, 2], [8, 4, 7], [6, 3, 1]],
-#     # 8 6 7 2 5 4 3 0 1
-#     # states explored: 2297
-#     # states generated: 3552
-#     # found at depth: 27
-#     [[8, 6, 7], [2, 5, 4], [3, 0, 1]]
-# ]
 testSolvePuzzle(testBoards, heuristics)

@@ -1,3 +1,3 @@
 [submodule "CS152-LBA"]
 	path = CS152-LBA
-	url = ./CS152-LBA
+	url = https://github.com/jdecked/CS152-LBA

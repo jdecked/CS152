@@ -1,0 +1,34 @@
+Wrote profile results to assignment1.py.lprof
+Timer unit: 1e-06 s
+
+Total time: 0.087815 s
+File: assignment1.py
+Function: manhattanDistance at line 276
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   276                                           @memoize
+   277                                           @profile
+   278                                           def manhattanDistance(state):
+   279                                               """
+   280                                               Heuristic function for how far away each tile is from its goal position,
+   281                                               using sum of individual Manhattan distances as the distance metric.
+   282                                           
+   283                                               @param state: State of puzzle board
+   284                                               @return distance: Sum of how far away each tile is from its goal position
+   285                                               """
+   286      1551         1567      1.0      1.8      boardSize = len(state)
+   287     20163        16686      0.8     19.0      goalCoords = [(i, j) for i in range(boardSize) for j in range(boardSize)]
+   288      1551         8192      5.3      9.3      goalCoordsDict = {tile: coords for tile, coords in enumerate(goalCoords)}
+   289      1551          823      0.5      0.9      distance = 0
+   290                                           
+   291      6204         4042      0.7      4.6      for x in range(boardSize):
+   292     18612        11980      0.6     13.6          for y in range(boardSize):
+   293     13959        12342      0.9     14.1              tile = state[x][y]
+   294                                           
+   295     13959        10656      0.8     12.1              if tile != 0:
+   296     12408         9532      0.8     10.9                  goalX, goalY = goalCoordsDict[tile]
+   297     12408        11150      0.9     12.7                  distance += abs(x - goalX) + abs(y - goalY)
+   298                                           
+   299      1551          845      0.5      1.0      return distance
+

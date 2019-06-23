@@ -1,0 +1,786 @@
+
+% Default to the notebook output style
+
+
+
+
+% Inherit from the specified cell style.
+
+
+
+
+
+\documentclass[11pt]{article}
+
+
+
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+
+
+
+
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{assignment1}
+
+
+
+
+    % Pygments definitions
+
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+
+
+
+    \begin{document}
+
+
+    \maketitle
+
+
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} \PY{c+c1}{\PYZsh{} \PYZhy{}*\PYZhy{} coding: utf\PYZhy{}8 \PYZhy{}*\PYZhy{}}
+
+        \PY{k+kn}{import} \PY{n+nn}{heapq}
+        \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k+kn}{import} \PY{n+nn}{re}
+        \PY{k+kn}{from} \PY{n+nn}{copy} \PY{k}{import} \PY{n}{deepcopy}
+        \PY{k+kn}{from} \PY{n+nn}{collections} \PY{k}{import} \PY{n}{Hashable}
+
+
+        \PY{k}{class} \PY{n+nc}{PuzzleNode}\PY{p}{(}\PY{n+nb}{object}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{size}\PY{p}{,} \PY{n}{state}\PY{o}{=}\PY{p}{[}\PY{p}{]}\PY{p}{,} \PY{n}{parent}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,}
+                         \PY{n}{heuristicCost}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{moves}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{:}
+                \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{        PuzzleNode class representing the state of tiles as a 2D array.}
+
+        \PY{l+s+sd}{        @param size: Size of puzzle board}
+        \PY{l+s+sd}{        @keyword state: Starting state of board (default: [])}
+        \PY{l+s+sd}{        @keyword parent: Pointer to parent PuzzleNode (default: None)}
+        \PY{l+s+sd}{        @keyword heuristicCost: Estimated cost of going from current node to}
+        \PY{l+s+sd}{                                goal node (default: 0)}
+        \PY{l+s+sd}{        @keyword moves: Cost of going from initial node to current node}
+        \PY{l+s+sd}{                        (default: 0)}
+
+        \PY{l+s+sd}{        @ivar board: 2D array representing state of tiles}
+        \PY{l+s+sd}{        @ivar pathCost: Cost of going from initial node to current node, plus}
+        \PY{l+s+sd}{                        estimated cost of going from current node to goal node}
+        \PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{board} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{state} \PY{o+ow}{or} \PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{n}{size} \PY{k}{for} \PY{n}{count} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{size}\PY{p}{)}\PY{p}{]}\PY{p}{)} \PYZbs{}
+                    \PY{k}{if} \PY{n+nb}{type}\PY{p}{(}\PY{n}{state}\PY{p}{)} \PY{o}{!=} \PY{n}{np}\PY{o}{.}\PY{n}{ndarray} \PY{k}{else} \PY{n}{state}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{parent} \PY{o}{=} \PY{n}{parent}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{pathCost} \PY{o}{=} \PY{n}{moves} \PY{o}{+} \PY{n}{heuristicCost}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{moves} \PY{o}{=} \PY{n}{moves}
+
+                \PY{k}{if} \PY{o+ow}{not} \PY{n+nb}{len}\PY{p}{(}\PY{n}{state}\PY{p}{)}\PY{p}{:}
+                    \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{\PYZus{}\PYZus{}populateSelf}\PY{p}{(}\PY{p}{)}
+
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}populateSelf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{n}{boardSize} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{board}\PY{p}{)}
+                \PY{n}{cellNumber} \PY{o}{=} \PY{l+m+mi}{0}
+                \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{boardSize}\PY{p}{)}\PY{p}{:}
+                    \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{boardSize}\PY{p}{)}\PY{p}{:}
+                        \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{board}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{n}{j}\PY{p}{]} \PY{o}{=} \PY{n}{cellNumber}
+                        \PY{n}{cellNumber} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}hash\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{k}{return} \PY{n+nb}{int}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}
+                    \PY{n+nb}{str}\PY{p}{(}\PY{n}{\PYZus{}}\PY{p}{)} \PY{k}{for} \PY{n}{\PYZus{}} \PY{o+ow}{in} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{board}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}
+                \PY{p}{)}\PY{p}{)}
+
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}eq\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{other}\PY{p}{)}\PY{p}{:}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n+nv+vm}{\PYZus{}\PYZus{}class\PYZus{}\PYZus{}} \PY{o}{!=} \PY{n}{other}\PY{o}{.}\PY{n+nv+vm}{\PYZus{}\PYZus{}class\PYZus{}\PYZus{}}\PY{p}{:}
+                    \PY{k}{return} \PY{k+kc}{False}
+                \PY{k}{else}\PY{p}{:}
+                    \PY{k}{return} \PY{n}{np}\PY{o}{.}\PY{n}{array\PYZus{}equal}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{board}\PY{p}{,} \PY{n}{other}\PY{o}{.}\PY{n}{board}\PY{p}{)}
+
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}lt\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{other}\PY{p}{)}\PY{p}{:}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n+nv+vm}{\PYZus{}\PYZus{}class\PYZus{}\PYZus{}} \PY{o}{!=} \PY{n}{other}\PY{o}{.}\PY{n+nv+vm}{\PYZus{}\PYZus{}class\PYZus{}\PYZus{}}\PY{p}{:}
+                    \PY{k}{return} \PY{k+kc}{False}
+                \PY{k}{else}\PY{p}{:}
+                    \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{pathCost} \PY{o}{\PYZlt{}} \PY{n}{other}\PY{o}{.}\PY{n}{pathCost}
+
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}str\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{        Prints 8\PYZhy{}puzzle in following format:}
+        \PY{l+s+sd}{        +\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}+}
+        \PY{l+s+sd}{        | \PYZhy{} | \PYZhy{} | \PYZhy{} |}
+        \PY{l+s+sd}{        | \PYZhy{} | \PYZhy{} | \PYZhy{} |}
+        \PY{l+s+sd}{        | \PYZhy{} | \PYZhy{} | \PYZhy{} |}
+        \PY{l+s+sd}{        +\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}+}
+        \PY{l+s+sd}{        Square puzzles of other sizes are printed analogously.}
+
+        \PY{l+s+sd}{        @return: Puzzle board formatted as described above.}
+        \PY{l+s+sd}{        \PYZdq{}\PYZdq{}\PYZdq{}}
+                \PY{n}{boardSize} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{board}\PY{p}{)}
+                \PY{n}{maxCellSize} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n+nb}{str}\PY{p}{(}\PY{n}{boardSize}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+
+                \PY{c+c1}{\PYZsh{} Fun thing I learned: I\PYZsq{}ve separated the bits which use re.sub and}
+                \PY{c+c1}{\PYZsh{} those which use str.replace because re.sub tends to be slower.}
+                \PY{c+c1}{\PYZsh{} Also, just because I don\PYZsq{}t need it if I\PYZsq{}m not actually using a}
+                \PY{c+c1}{\PYZsh{} non\PYZhy{}static expression.}
+                \PY{c+c1}{\PYZsh{} More fun discussion here:}
+                \PY{c+c1}{\PYZsh{} https://stackoverflow.com/questions/452104/is\PYZhy{}it\PYZhy{}worth\PYZhy{}using\PYZhy{}pythons\PYZhy{}re\PYZhy{}compile}
+                \PY{n}{currentCellSize} \PY{o}{=} \PY{l+m+mi}{1}
+                \PY{n}{cellsWithSpaces} \PY{o}{=} \PY{n+nb}{str}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{board}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+                \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{maxCellSize}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                    \PY{n}{digitRegex} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{compile}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{(}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{d}\PY{l+s+s1}{\PYZob{}\PYZob{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZcb{}\PYZcb{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{b)}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{currentCellSize}\PY{p}{)}\PY{p}{)}
+                    \PY{n}{cellsWithSpaces} \PY{o}{=} \PY{n}{digitRegex}\PY{o}{.}\PY{n}{sub}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{1 |}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{rjust}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{,}
+                                                     \PY{n}{cellsWithSpaces}\PY{p}{)}
+                    \PY{n}{currentCellSize} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+                \PY{n}{withDashes} \PY{o}{=} \PY{n}{re}\PY{o}{.}\PY{n}{sub}\PY{p}{(}\PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{b0}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{cellsWithSpaces}\PY{p}{)}
+
+                \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{+}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{}}\PY{l+s+s1}{\PYZsq{}} \PY{o}{*} \PY{p}{(}\PY{n}{boardSize} \PY{o}{*} \PY{p}{(}\PY{n}{maxCellSize} \PY{o}{+} \PY{l+m+mi}{3}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{+} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{+}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PYZbs{}
+                    \PY{n}{withDashes}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{[}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{|}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PYZbs{}
+                              \PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{]}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PYZbs{}
+                              \PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{, }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{o}{+} \PYZbs{}
+                    \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{+}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{}}\PY{l+s+s1}{\PYZsq{}} \PY{o}{*} \PY{p}{(}\PY{n}{boardSize} \PY{o}{*} \PY{p}{(}\PY{n}{maxCellSize} \PY{o}{+} \PY{l+m+mi}{3}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{+} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{+}\PY{l+s+s1}{\PYZsq{}}
+
+
+        \PY{k}{class} \PY{n+nc}{InvalidBoardFormatError}\PY{p}{(}\PY{n+ne}{TypeError}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{board}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{message} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Board is not an instance of }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{ or }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}} \PYZbs{}
+                    \PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{list}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{ndarray}\PY{p}{,} \PY{n}{board}\PY{p}{)}
+
+
+        \PY{k}{class} \PY{n+nc}{IncorrectBoardSizeError}\PY{p}{(}\PY{n+ne}{ValueError}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{board}\PY{p}{,} \PY{n}{size}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{message} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Size }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s1}{ does not match dimensions of board }\PY{l+s+si}{\PYZob{}1\PYZcb{}}\PY{l+s+s1}{x}\PY{l+s+si}{\PYZob{}1\PYZcb{}}\PY{l+s+s1}{\PYZsq{}} \PYZbs{}
+                    \PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{size}\PY{p}{,} \PY{n}{board}\PY{p}{)}
+
+
+        \PY{k}{class} \PY{n+nc}{InvalidTilesError}\PY{p}{(}\PY{n+ne}{ValueError}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{actualOccurrences}\PY{p}{,} \PY{n}{tile}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{message} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Board contains }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ occurrences of tile \PYZlt{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZgt{} when it}\PY{l+s+s1}{\PYZsq{}} \PYZbs{}
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ should contain 1}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{actualOccurrences}\PY{p}{,} \PY{n}{tile}\PY{p}{)}
+
+
+        \PY{k}{class} \PY{n+nc}{UnsolvableBoardError}\PY{p}{(}\PY{n+ne}{ValueError}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{board}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{message} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Board }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ is unsolvable}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{board}\PY{p}{)}
+
+
+        \PY{k}{def} \PY{n+nf}{memoize}\PY{p}{(}\PY{n}{func}\PY{p}{)}\PY{p}{:}
+            \PY{k}{class} \PY{n+nc}{memoized}\PY{p}{(}\PY{n+nb}{dict}\PY{p}{)}\PY{p}{:}
+                \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{func}\PY{p}{)}\PY{p}{:}
+                    \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{func} \PY{o}{=} \PY{n}{func}
+
+                \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}call\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{arg}\PY{p}{)}\PY{p}{:}
+                    \PY{c+c1}{\PYZsh{} Can we actually memoize this?}
+                    \PY{k}{if} \PY{o+ow}{not} \PY{n+nb}{isinstance}\PY{p}{(}\PY{n}{arg}\PY{p}{,} \PY{n}{Hashable}\PY{p}{)}\PY{p}{:}
+                        \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{func}\PY{p}{(}\PY{n}{arg}\PY{p}{)}
+
+                    \PY{k}{return} \PY{n+nb+bp}{self}\PY{p}{[}\PY{n}{arg}\PY{p}{]}
+
+                \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}missing\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{key}\PY{p}{)}\PY{p}{:}
+                    \PY{n}{value} \PY{o}{=} \PY{n+nb+bp}{self}\PY{p}{[}\PY{n}{key}\PY{p}{]} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{func}\PY{p}{(}\PY{n}{key}\PY{p}{)}
+                    \PY{k}{return} \PY{n}{value}
+
+                \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                    \PY{k}{return} \PY{n+nb}{repr}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{func}\PY{p}{)}
+
+            \PY{k}{return} \PY{n}{memoized}\PY{p}{(}\PY{n}{func}\PY{p}{)}
+
+
+        \PY{k}{def} \PY{n+nf}{validatePuzzle}\PY{p}{(}\PY{n}{n}\PY{p}{,} \PY{n}{state}\PY{p}{,} \PY{n}{makeSolvable}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{:}
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{    Validates given n\PYZhy{}puzzle.}
+
+        \PY{l+s+sd}{    @param n: Size of puzzle board}
+        \PY{l+s+sd}{    @param state: State of puzzle}
+        \PY{l+s+sd}{    @keyword makeSolvable: If state is unsolvable and makeSolvable is True,}
+        \PY{l+s+sd}{                           swaps two adjacent tiles such that the parity of the}
+        \PY{l+s+sd}{                           board is reversed. If False or state is solvable,}
+        \PY{l+s+sd}{                           nothing is swapped. (default: False)}
+
+        \PY{l+s+sd}{    @return err: Error code 0 if n and state are valid; else}
+        \PY{l+s+sd}{                 \PYZhy{}1 if IncorrectBoardSizeError, InvalidBoardFormatError, or}
+        \PY{l+s+sd}{                 InvalidTilesError are raised; else}
+        \PY{l+s+sd}{                 \PYZhy{}2 if UnsolvableBoardError is raised}
+        \PY{l+s+sd}{    @return solvableBoard: If state is unsolvable and makeSolvable is True,}
+        \PY{l+s+sd}{                           a solvable board. If either state is solvable or}
+        \PY{l+s+sd}{                           makeSolvable is False, None.}
+
+        \PY{l+s+sd}{    @raise IncorrectBoardSizeError: Raised if size of both state and all}
+        \PY{l+s+sd}{                                    sublists of state doesn\PYZsq{}t equal n}
+        \PY{l+s+sd}{    @raise InvalidBoardFormatError: Raised if state is formatted incorrectly}
+        \PY{l+s+sd}{    @raise InvalidTilesError: Raised if state doesn\PYZsq{}t contain every number}
+        \PY{l+s+sd}{                              from 0 to n\PYZca{}2\PYZhy{}1 exactly once}
+        \PY{l+s+sd}{    @raise UnsolvableBoardError: Raised if state cannot be solved to goal state}
+        \PY{l+s+sd}{                                 (i.e. board parity is not even for odd n;}
+        \PY{l+s+sd}{                                 board parity is not even for even n with 0 on}
+        \PY{l+s+sd}{                                 odd row; or board parity is not odd for even}
+        \PY{l+s+sd}{                                 n with 0 on even row, counting from top}
+        \PY{l+s+sd}{                                 starting from 1 — modified from Johnson \PYZam{}}
+        \PY{l+s+sd}{                                 Story\PYZsq{}s (1879) use of the Manhattan distance}
+        \PY{l+s+sd}{                                 to fit our different goal state).}
+        \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+
+            \PY{n}{err} \PY{o}{=} \PY{l+m+mi}{0}
+            \PY{n}{solvableBoard} \PY{o}{=} \PY{k+kc}{None}
+
+            \PY{k}{try}\PY{p}{:}
+                \PY{k}{if} \PY{n+nb}{type}\PY{p}{(}\PY{n}{state}\PY{p}{)} \PY{o+ow}{not} \PY{o+ow}{in} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{ndarray}\PY{p}{,} \PY{n+nb}{list}\PY{p}{)}\PY{p}{:}
+                    \PY{k}{raise} \PY{n}{InvalidBoardFormatError}\PY{p}{(}\PY{n}{state}\PY{p}{)}
+
+                \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{state}\PY{p}{)} \PY{o}{!=} \PY{n}{n}\PY{p}{:}
+                    \PY{k}{raise} \PY{n}{IncorrectBoardSizeError}\PY{p}{(}\PY{n}{n}\PY{p}{,} \PY{n}{state}\PY{p}{)}
+
+                \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+                    \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{state}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)} \PY{o}{!=} \PY{n}{n}\PY{p}{:}
+                        \PY{k}{raise} \PY{n}{IncorrectBoardSizeError}\PY{p}{(}\PY{n}{n}\PY{p}{,} \PY{n}{state}\PY{p}{)}
+
+                \PY{n}{expectedTile} \PY{o}{=} \PY{l+m+mi}{0}
+                \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+                    \PY{n}{actualOccurrences} \PY{o}{=} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{\PYZus{}}\PY{o}{.}\PY{n}{count}\PY{p}{(}\PY{n}{expectedTile}\PY{p}{)} \PY{k}{for} \PY{n}{\PYZus{}} \PY{o+ow}{in} \PY{n}{state}\PY{p}{)}
+                    \PY{k}{if} \PY{n}{actualOccurrences} \PY{o}{!=} \PY{l+m+mi}{1}\PY{p}{:}
+                        \PY{k}{raise} \PY{n}{InvalidTilesError}\PY{p}{(}\PY{n}{actualOccurrences}\PY{p}{,} \PY{n}{expectedTile}\PY{p}{)}
+                    \PY{n}{expectedTile} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+                \PY{n}{solvable} \PY{o}{=} \PY{k+kc}{True}
+
+                \PY{c+c1}{\PYZsh{} Parity of board permutations}
+                \PY{n}{numTiles} \PY{o}{=} \PY{l+m+mi}{0}
+                \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+                    \PY{k}{for} \PY{n}{l} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+                        \PY{n}{currentTile} \PY{o}{=} \PY{n}{state}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{n}{l}\PY{p}{]}
+
+                        \PY{k}{if} \PY{n}{currentTile} \PY{o+ow}{not} \PY{o+ow}{in} \PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                            \PY{n}{flattenedBoard} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{state}\PY{p}{)}\PY{o}{.}\PY{n}{flatten}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}
+                            \PY{n}{currentTileIdx} \PY{o}{=} \PY{n}{flattenedBoard}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{n}{currentTile}\PY{p}{)}
+                            \PY{n}{numTiles} \PY{o}{+}\PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n+nb}{filter}\PY{p}{(}
+                                \PY{k}{lambda} \PY{n}{tile}\PY{p}{:} \PY{n}{tile} \PY{o}{\PYZlt{}} \PY{n}{currentTile} \PY{o+ow}{and} \PY{n}{tile} \PY{o}{!=} \PY{l+m+mi}{0}\PY{p}{,}
+                                \PY{n}{flattenedBoard}\PY{p}{[}\PY{n}{currentTileIdx}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]}
+                            \PY{p}{)}\PY{p}{)}\PY{p}{)}
+                \PY{n}{permutationsParity} \PY{o}{=} \PY{n}{numTiles} \PY{o}{\PYZpc{}} \PY{l+m+mi}{2}
+
+                \PY{k}{if} \PY{n}{n} \PY{o}{\PYZpc{}} \PY{l+m+mi}{2} \PY{o}{!=} \PY{l+m+mi}{0}\PY{p}{:}
+                    \PY{k}{if} \PY{n}{permutationsParity} \PY{o}{!=} \PY{l+m+mi}{0}\PY{p}{:}
+                        \PY{n}{solvable} \PY{o}{=} \PY{k+kc}{False}
+                \PY{k}{else}\PY{p}{:}
+                    \PY{c+c1}{\PYZsh{} Parity of row with empty square}
+                    \PY{n}{emptyI}\PY{p}{,} \PY{n}{emptyJ} \PY{o}{=} \PY{n+nb}{list}\PY{p}{(}\PY{n+nb}{zip}\PY{p}{(}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{state}\PY{p}{)} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+                    \PY{n}{emptySquareRowParity} \PY{o}{=} \PY{n}{emptyI} \PY{o}{\PYZpc{}} \PY{l+m+mi}{2}
+
+                    \PY{k}{if} \PY{n}{permutationsParity} \PY{o}{!=} \PY{n}{emptySquareRowParity}\PY{p}{:}
+                        \PY{n}{solvable} \PY{o}{=} \PY{k+kc}{False}
+
+                \PY{k}{if} \PY{o+ow}{not} \PY{n}{solvable}\PY{p}{:}
+                    \PY{k}{if} \PY{n}{makeSolvable}\PY{p}{:}
+                        \PY{c+c1}{\PYZsh{} Unsolvable puzzles can be made solvable by swapping the first}
+                        \PY{c+c1}{\PYZsh{} two non\PYZhy{}zero tiles.}
+                        \PY{k}{for} \PY{n}{x} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{:}
+                            \PY{k}{for} \PY{n}{y} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{:}
+                                \PY{k}{if} \PY{n}{state}\PY{p}{[}\PY{n}{x}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{y}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{!=} \PY{l+m+mi}{0}\PY{p}{:}
+                                    \PY{n}{state}\PY{p}{[}\PY{n}{x}\PY{p}{]}\PY{p}{[}\PY{n}{y}\PY{p}{]}\PY{p}{,} \PY{n}{state}\PY{p}{[}\PY{n}{x}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{y}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PYZbs{}
+                                        \PY{n}{state}\PY{p}{[}\PY{n}{x}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{y}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{state}\PY{p}{[}\PY{n}{x}\PY{p}{]}\PY{p}{[}\PY{n}{y}\PY{p}{]}
+
+                                    \PY{k}{return} \PY{n}{err}\PY{p}{,} \PY{n}{solvableBoard}
+                    \PY{k}{else}\PY{p}{:}
+                        \PY{k}{raise} \PY{n}{UnsolvableBoardError}\PY{p}{(}\PY{n}{state}\PY{p}{)}
+
+            \PY{k}{except} \PY{p}{(}
+                \PY{n}{InvalidBoardFormatError}\PY{p}{,}
+                \PY{n}{IncorrectBoardSizeError}\PY{p}{,}
+                \PY{n}{InvalidTilesError}
+            \PY{p}{)}\PY{p}{:}
+                \PY{n}{err} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}
+            \PY{k}{except} \PY{n}{UnsolvableBoardError}\PY{p}{:}
+                \PY{n}{err} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mi}{2}
+
+            \PY{k}{return} \PY{n}{err}\PY{p}{,} \PY{n}{solvableBoard}
+
+
+        \PY{n+nd}{@memoize}
+        \PY{k}{def} \PY{n+nf}{misplacedTiles}\PY{p}{(}\PY{n}{state}\PY{p}{)}\PY{p}{:}
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{    Heuristic function for number of misplaced tiles in given state.}
+
+        \PY{l+s+sd}{    @param state: State of n\PYZhy{}puzzle board}
+        \PY{l+s+sd}{    @return misplacedTiles: Number of misplaced tiles in state}
+        \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{n}{boardSize} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{state}\PY{p}{)}
+            \PY{n}{goal} \PY{o}{=} \PY{n}{PuzzleNode}\PY{p}{(}\PY{n}{boardSize}\PY{p}{)}
+
+            \PY{n}{misplacedTiles} \PY{o}{=} \PY{l+m+mi}{0}
+
+            \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{boardSize}\PY{p}{)}\PY{p}{:}
+                \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{boardSize}\PY{p}{)}\PY{p}{:}
+                    \PY{k}{if} \PY{p}{(}\PY{n}{state}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{n}{j}\PY{p}{]} \PY{o}{!=} \PY{n}{goal}\PY{o}{.}\PY{n}{board}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+                        \PY{n}{misplacedTiles} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+            \PY{k}{return} \PY{n}{misplacedTiles}
+
+
+        \PY{n+nd}{@memoize}
+        \PY{k}{def} \PY{n+nf}{manhattanDistance}\PY{p}{(}\PY{n}{state}\PY{p}{)}\PY{p}{:}
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{    Heuristic function for how far away each tile is from its goal position,}
+        \PY{l+s+sd}{    using sum of individual Manhattan distances as the distance metric.}
+
+        \PY{l+s+sd}{    @param state: State of puzzle board}
+        \PY{l+s+sd}{    @return distance: Sum of how far away each tile is from its goal position}
+        \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{n}{boardSize} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{state}\PY{p}{)}
+            \PY{n}{goalCoords} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{j}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{boardSize}\PY{p}{)} \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{boardSize}\PY{p}{)}\PY{p}{]}
+            \PY{n}{goalCoordsDict} \PY{o}{=} \PY{p}{\PYZob{}}\PY{n}{tile}\PY{p}{:} \PY{n}{coords} \PY{k}{for} \PY{n}{tile}\PY{p}{,} \PY{n}{coords} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{goalCoords}\PY{p}{)}\PY{p}{\PYZcb{}}
+            \PY{n}{distance} \PY{o}{=} \PY{l+m+mi}{0}
+
+            \PY{k}{for} \PY{n}{x} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{boardSize}\PY{p}{)}\PY{p}{:}
+                \PY{k}{for} \PY{n}{y} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{boardSize}\PY{p}{)}\PY{p}{:}
+                    \PY{n}{tile} \PY{o}{=} \PY{n}{state}\PY{p}{[}\PY{n}{x}\PY{p}{]}\PY{p}{[}\PY{n}{y}\PY{p}{]}
+
+                    \PY{k}{if} \PY{n}{tile} \PY{o}{!=} \PY{l+m+mi}{0}\PY{p}{:}
+                        \PY{n}{goalX}\PY{p}{,} \PY{n}{goalY} \PY{o}{=} \PY{n}{goalCoordsDict}\PY{p}{[}\PY{n}{tile}\PY{p}{]}
+                        \PY{n}{distance} \PY{o}{+}\PY{o}{=} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{x} \PY{o}{\PYZhy{}} \PY{n}{goalX}\PY{p}{)} \PY{o}{+} \PY{n+nb}{abs}\PY{p}{(}\PY{n}{y} \PY{o}{\PYZhy{}} \PY{n}{goalY}\PY{p}{)}
+
+            \PY{k}{return} \PY{n}{distance}
+
+
+        \PY{k}{def} \PY{n+nf}{getChildStates}\PY{p}{(}\PY{n}{state}\PY{p}{)}\PY{p}{:}
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{    Generates child states by looking at state to determine which tiles}
+        \PY{l+s+sd}{    can move into the empty space, then returning all swaps of the empty}
+        \PY{l+s+sd}{    space with those tiles.}
+
+        \PY{l+s+sd}{    @param state: Current PuzzleNode}
+        \PY{l+s+sd}{    @return possibleChildren: Possible child states}
+        \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{c+c1}{\PYZsh{} First find which tiles can move into empty space}
+            \PY{n}{emptyI}\PY{p}{,} \PY{n}{emptyJ} \PY{o}{=} \PY{n+nb}{list}\PY{p}{(}\PY{n+nb}{zip}\PY{p}{(}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{state}\PY{o}{.}\PY{n}{board} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+            \PY{n}{canMoveIntoEmpty} \PY{o}{=} \PY{n+nb}{set}\PY{p}{(}\PY{p}{)}
+
+            \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+                \PY{k}{if} \PY{p}{(}\PY{n}{emptyI} \PY{o}{+} \PY{n}{i} \PY{o}{\PYZlt{}} \PY{n+nb}{len}\PY{p}{(}\PY{n}{state}\PY{o}{.}\PY{n}{board}\PY{p}{)}\PY{p}{)} \PY{o+ow}{and} \PY{p}{(}\PY{n}{emptyI} \PY{o}{+} \PY{n}{i} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{:}
+                    \PY{n}{canMoveIntoEmpty}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{p}{(}\PY{n}{emptyI} \PY{o}{+} \PY{n}{i}\PY{p}{,} \PY{n}{emptyJ}\PY{p}{)}\PY{p}{)}
+
+                \PY{k}{if} \PY{p}{(}\PY{n}{emptyJ} \PY{o}{+} \PY{n}{i} \PY{o}{\PYZlt{}} \PY{n+nb}{len}\PY{p}{(}\PY{n}{state}\PY{o}{.}\PY{n}{board}\PY{p}{)}\PY{p}{)} \PY{o+ow}{and} \PY{p}{(}\PY{n}{emptyJ} \PY{o}{+} \PY{n}{i} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{:}
+                    \PY{n}{canMoveIntoEmpty}\PY{o}{.}\PY{n}{add}\PY{p}{(}\PY{p}{(}\PY{n}{emptyI}\PY{p}{,} \PY{n}{emptyJ} \PY{o}{+} \PY{n}{i}\PY{p}{)}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} Swap tiles to generate each possible child state}
+            \PY{n}{possibleChildren} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+            \PY{k}{for} \PY{n}{possibleMove} \PY{o+ow}{in} \PY{n}{canMoveIntoEmpty}\PY{p}{:}
+                \PY{n}{i}\PY{p}{,} \PY{n}{j} \PY{o}{=} \PY{n}{possibleMove}
+                \PY{n}{possibleChild} \PY{o}{=} \PY{n}{deepcopy}\PY{p}{(}\PY{n}{state}\PY{o}{.}\PY{n}{board}\PY{p}{)}
+                \PY{n}{possibleChild}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{n}{j}\PY{p}{]}\PY{p}{,} \PY{n}{possibleChild}\PY{p}{[}\PY{n}{emptyI}\PY{p}{]}\PY{p}{[}\PY{n}{emptyJ}\PY{p}{]} \PY{o}{=} \PYZbs{}
+                    \PY{n}{possibleChild}\PY{p}{[}\PY{n}{emptyI}\PY{p}{]}\PY{p}{[}\PY{n}{emptyJ}\PY{p}{]}\PY{p}{,} \PY{n}{possibleChild}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{[}\PY{n}{j}\PY{p}{]}
+                \PY{n}{possibleChildren}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{possibleChild}\PY{p}{)}
+
+            \PY{k}{return} \PY{n}{possibleChildren}
+
+
+        \PY{k}{def} \PY{n+nf}{solvePuzzle}\PY{p}{(}\PY{n}{n}\PY{p}{,} \PY{n}{state}\PY{p}{,} \PY{n}{heuristic}\PY{p}{,} \PY{n}{printed}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}\PY{p}{:}
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{    n\PYZhy{}puzzle solver using A*, modified from R. Shekhar\PYZsq{}s A* code from}
+        \PY{l+s+sd}{    lesson 3.1.}
+
+        \PY{l+s+sd}{    @param n: Size of puzzle board}
+        \PY{l+s+sd}{    @param state: Starting state of puzzle}
+        \PY{l+s+sd}{    @param heuristic: Heuristic function handler}
+        \PY{l+s+sd}{    @keyword printed: If True, solvePuzzle prints all states of the board (as}
+        \PY{l+s+sd}{                      lists of lists) from initial state to goal, as well as}
+        \PY{l+s+sd}{                      the number of moves to reach the goal and the maximum}
+        \PY{l+s+sd}{                      frontier size. If False, nothing is printed. (default:}
+        \PY{l+s+sd}{                      True)}
+
+        \PY{l+s+sd}{    @var frontier: A priority queue ordered by path cost}
+        \PY{l+s+sd}{    @var explored: A dictionary of previously seen states mapped to the}
+        \PY{l+s+sd}{                   PuzzleNode (and thus pathCost, depth) at which we saw them.}
+        \PY{l+s+sd}{                   This prevents repeated states, including those which arise}
+        \PY{l+s+sd}{                   from simply undoing the previous move.}
+
+        \PY{l+s+sd}{    @return totalMoves: Number of moves required to reach goal state from}
+        \PY{l+s+sd}{                        initial state}
+        \PY{l+s+sd}{    @return maxFrontierSize: Maximum size of frontier during the search}
+        \PY{l+s+sd}{    @return err: \PYZhy{}1 if n or state is invalid, \PYZhy{}2 if board can\PYZsq{}t be solved,}
+        \PY{l+s+sd}{                 else 0. If err is non\PYZhy{}zero, moves and frontierSize are 0.}
+        \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+
+            \PY{n}{moves} \PY{o}{=} \PY{l+m+mi}{0}
+            \PY{n}{totalMoves} \PY{o}{=} \PY{l+m+mi}{0}
+            \PY{n}{maxFrontierSize} \PY{o}{=} \PY{l+m+mi}{0}
+            \PY{n}{err}\PY{p}{,} \PY{n}{solvableBoard} \PY{o}{=} \PY{n}{validatePuzzle}\PY{p}{(}\PY{n}{n}\PY{p}{,} \PY{n}{state}\PY{p}{)}
+
+            \PY{k}{if} \PY{o+ow}{not} \PY{n}{err}\PY{p}{:}
+                \PY{n}{state} \PY{o}{=} \PY{n}{solvableBoard} \PY{o+ow}{or} \PY{n}{state}
+
+                \PY{n}{initialNode} \PY{o}{=} \PY{n}{PuzzleNode}\PY{p}{(}
+                    \PY{n}{size}\PY{o}{=}\PY{n}{n}\PY{p}{,}
+                    \PY{n}{state}\PY{o}{=}\PY{n}{state}\PY{p}{,}
+                    \PY{n}{heuristicCost}\PY{o}{=}\PY{n}{heuristic}\PY{p}{(}\PY{n}{state}\PY{p}{)}
+                \PY{p}{)}
+                \PY{n}{goalNode} \PY{o}{=} \PY{n}{PuzzleNode}\PY{p}{(}\PY{n}{size}\PY{o}{=}\PY{n}{n}\PY{p}{)}
+
+                \PY{n}{explored} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+                \PY{n}{frontier} \PY{o}{=} \PY{p}{[}\PY{n}{initialNode}\PY{p}{]}
+                \PY{n}{maxFrontierSize} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+                \PY{k}{while} \PY{n}{frontier}\PY{p}{:}
+                    \PY{n}{currentNode} \PY{o}{=} \PY{n}{heapq}\PY{o}{.}\PY{n}{heappop}\PY{p}{(}\PY{n}{frontier}\PY{p}{)}
+
+                    \PY{k}{if} \PY{n}{currentNode} \PY{o}{==} \PY{n}{goalNode}\PY{p}{:}
+                        \PY{n}{totalMoves} \PY{o}{=} \PY{n}{currentNode}\PY{o}{.}\PY{n}{moves}
+
+                        \PY{k}{if} \PY{n}{printed}\PY{p}{:}
+                            \PY{n}{solutionPath} \PY{o}{=} \PY{p}{[}\PY{n+nb}{str}\PY{p}{(}\PY{n}{currentNode}\PY{o}{.}\PY{n}{board}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{]}
+                            \PY{k}{while} \PY{n}{currentNode}\PY{o}{.}\PY{n}{parent}\PY{p}{:}
+                                \PY{n}{solutionPath}\PY{o}{.}\PY{n}{append}\PY{p}{(}
+                                    \PY{n+nb}{str}\PY{p}{(}\PY{n}{currentNode}\PY{o}{.}\PY{n}{parent}\PY{o}{.}\PY{n}{board}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+                                \PY{p}{)}
+                                \PY{n}{currentNode} \PY{o}{=} \PY{n}{currentNode}\PY{o}{.}\PY{n}{parent}
+
+                            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{solutionPath}\PY{p}{[}\PY{p}{:}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+                            \PY{n+nb}{print}\PY{p}{(}\PY{n}{totalMoves}\PY{p}{)}
+                            \PY{n+nb}{print}\PY{p}{(}\PY{n}{maxFrontierSize}\PY{p}{)}
+
+                        \PY{k}{return} \PY{n}{totalMoves}\PY{p}{,} \PY{n}{maxFrontierSize}\PY{p}{,} \PY{n}{err}
+
+                    \PY{n}{explored}\PY{p}{[}\PY{n}{currentNode}\PY{p}{]} \PY{o}{=} \PY{n}{currentNode}
+
+                    \PY{n}{childStates} \PY{o}{=} \PY{n}{getChildStates}\PY{p}{(}\PY{n}{currentNode}\PY{p}{)}
+
+                    \PY{k}{for} \PY{n}{childState} \PY{o+ow}{in} \PY{n}{childStates}\PY{p}{:}
+                        \PY{n}{childNode} \PY{o}{=} \PY{n}{PuzzleNode}\PY{p}{(}
+                            \PY{n}{size}\PY{o}{=}\PY{n}{n}\PY{p}{,}
+                            \PY{n}{state}\PY{o}{=}\PY{n}{childState}\PY{p}{,}
+                            \PY{n}{parent}\PY{o}{=}\PY{n}{currentNode}\PY{p}{,}
+                            \PY{n}{heuristicCost}\PY{o}{=}\PY{n}{heuristic}\PY{p}{(}\PY{n}{childState}\PY{p}{)}\PY{p}{,}
+                            \PY{n}{moves}\PY{o}{=}\PY{n}{currentNode}\PY{o}{.}\PY{n}{moves} \PY{o}{+} \PY{l+m+mi}{1}
+                        \PY{p}{)}
+
+                        \PY{n}{exploredNode} \PY{o}{=} \PY{n}{explored}\PY{o}{.}\PY{n}{get}\PY{p}{(}\PY{n}{childNode}\PY{p}{)}
+
+                        \PY{c+c1}{\PYZsh{} If we: a) haven\PYZsq{}t yet explored this node, or}
+                        \PY{c+c1}{\PYZsh{} b) explored this node when it had a higher pathCost,}
+                        \PY{c+c1}{\PYZsh{} then we should put it into the frontier so that}
+                        \PY{c+c1}{\PYZsh{} we can explore it.}
+                        \PY{k}{if} \PY{p}{(}
+                            \PY{n}{exploredNode} \PY{o+ow}{is} \PY{k+kc}{None} \PY{o+ow}{or}
+                            \PY{n}{childNode}\PY{o}{.}\PY{n}{pathCost} \PY{o}{\PYZlt{}} \PY{n}{exploredNode}\PY{o}{.}\PY{n}{pathCost}
+                        \PY{p}{)}\PY{p}{:}
+                            \PY{n}{heapq}\PY{o}{.}\PY{n}{heappush}\PY{p}{(}\PY{n}{frontier}\PY{p}{,} \PY{n}{childNode}\PY{p}{)}
+
+                        \PY{c+c1}{\PYZsh{} If we\PYZsq{}re already planning to explore this node later on}
+                        \PY{c+c1}{\PYZsh{} (i.e. it\PYZsq{}s in the frontier), AND the version of the node}
+                        \PY{c+c1}{\PYZsh{} we\PYZsq{}re currently looking at has a lower pathCost than the}
+                        \PY{c+c1}{\PYZsh{} one in our frontier, then we should replace the node in}
+                        \PY{c+c1}{\PYZsh{} our frontier with the one we\PYZsq{}re currently looking at.}
+                        \PY{k}{elif} \PY{p}{(}
+                            \PY{n}{exploredNode} \PY{o+ow}{is} \PY{o+ow}{not} \PY{k+kc}{None} \PY{o+ow}{and}
+                            \PY{n}{exploredNode} \PY{o+ow}{in} \PY{n}{frontier} \PY{o+ow}{and}
+                            \PY{n}{childNode}\PY{o}{.}\PY{n}{pathCost} \PY{o}{\PYZlt{}} \PY{n}{exploredNode}\PY{o}{.}\PY{n}{pathCost}
+                        \PY{p}{)}\PY{p}{:}
+                            \PY{n}{frontier}\PY{o}{.}\PY{n}{remove}\PY{p}{(}\PY{n}{exploredNode}\PY{p}{)}
+                            \PY{n}{heapq}\PY{o}{.}\PY{n}{heappush}\PY{p}{(}\PY{n}{frontier}\PY{p}{,} \PY{n}{childNode}\PY{p}{)}
+
+                    \PY{n}{moves} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+                    \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{frontier}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{n}{maxFrontierSize}\PY{p}{:}
+                        \PY{n}{maxFrontierSize} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{frontier}\PY{p}{)}
+
+            \PY{k}{return} \PY{n}{totalMoves}\PY{p}{,} \PY{n}{maxFrontierSize}\PY{p}{,} \PY{n}{err}
+
+
+        \PY{k}{def} \PY{n+nf}{testSolvePuzzle}\PY{p}{(}\PY{n}{boards}\PY{p}{,} \PY{n}{heuristics}\PY{p}{)}\PY{p}{:}
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
+        \PY{l+s+sd}{    Tests solvePuzzle, printing out number of moves and maximum frontier size}
+        \PY{l+s+sd}{    for each given initial condition.}
+
+        \PY{l+s+sd}{    @param boards: Scrambled boards to use as initial states in tests}
+        \PY{l+s+sd}{    @param heuristics: Available heuristics for A* algorithm}
+        \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
+
+            \PY{k}{for} \PY{n}{board} \PY{o+ow}{in} \PY{n}{boards}\PY{p}{:}
+                \PY{k}{for} \PY{n}{heuristic} \PY{o+ow}{in} \PY{n}{heuristics}\PY{p}{:}
+                    \PY{n}{n} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{board}\PY{p}{)}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Current board: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{board}\PY{p}{)}\PY{p}{)}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Current heuristic: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{heuristic}\PY{p}{)}\PY{p}{)}
+                    \PY{n}{moves}\PY{p}{,} \PY{n}{frontierSize}\PY{p}{,} \PY{n}{err} \PY{o}{=} \PY{n}{solvePuzzle}\PY{p}{(}\PY{n}{n}\PY{o}{=}\PY{n}{n}\PY{p}{,}
+                                                           \PY{n}{state}\PY{o}{=}\PY{n}{board}\PY{p}{,}
+                                                           \PY{n}{heuristic}\PY{o}{=}\PY{n}{heuristic}\PY{p}{,}
+                                                           \PY{n}{printed}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Moves to solve current board: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{moves}\PY{p}{)}\PY{p}{)}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Current board}\PY{l+s+se}{\PYZbs{}\PYZsq{}}\PY{l+s+s1}{s max frontier size: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}
+                          \PY{n}{frontierSize}\PY{p}{)}\PY{p}{)}
+
+
+        \PY{n}{heuristics} \PY{o}{=} \PY{p}{[}\PY{n}{misplacedTiles}\PY{p}{,} \PY{n}{manhattanDistance}\PY{p}{]}
+        \PY{n}{testBoards} \PY{o}{=} \PY{p}{[}
+            \PY{p}{[}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mi}{7}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{,}
+            \PY{p}{[}\PY{p}{[}\PY{l+m+mi}{7}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]}\PY{p}{]}\PY{p}{,}
+            \PY{p}{[}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{7}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{]}\PY{p}{]}
+        \PY{p}{]}
+        \PY{n}{testSolvePuzzle}\PY{p}{(}\PY{n}{testBoards}\PY{p}{,} \PY{n}{heuristics}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{longtable}[]{@{}rlll@{}}
+\toprule
+initial state & heuristic & number of moves & max frontier
+size\tabularnewline
+\midrule
+\endhead
+{[}{[}5, 7, 6{]}, {[}2, 4, 3{]}, {[}8, 1, 0{]}{]} & Misplaced tiles & 28
+& 28547\tabularnewline
+& Manhattan distance & 28 & 937\tabularnewline
+{[}{[}7, 0, 8{]}, {[}4, 6, 1{]}, {[}5, 3, 2{]}{]} & Misplaced tiles & 25
+& 15444\tabularnewline
+& Manhattan distance & 25 & 983\tabularnewline
+{[}{[}2, 3, 7{]}, {[}1, 8, 0{]}, {[}6, 5, 4{]}{]} & Misplaced tiles & 17
+& 452\tabularnewline
+& Manhattan distance & 17 & 68\tabularnewline
+\bottomrule
+\end{longtable}
+
+
+
+
+
+    % Add a bibliography block to the postdoc
+
+
+
+    \end{document}
